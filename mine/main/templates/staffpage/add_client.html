@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Ajouter Client{% endblock title %}
+
+{% load static %}
+{% block main %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Ajouter Client</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+                {% url 'add_client_save' as action_path %}
+                {% include 'staffpage/form_template.html' with messages=messages form=form action_path=action_path button_text="Ajouter Client" %}
+            </div>
+            <!-- /.card -->
+
+
+
+          </div>
+          </div>
+      </div>
+    </section>
+    <!-- /.content -->
+
+
+    <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+{% endblock main %}

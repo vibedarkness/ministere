@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Liste BA{% endblock title %}
+
+
+{% block main %}
+
+<div class="row">
+    <div class="d-flex align-items-center">
+        <a href="{% url "add_ba" %}" class="btn btn-primary btn-sm ms-2">+ Ajouter BA</a>
+    </div>
+
+    <br>
+    <div class="col-xl-12">
+        <div class="card dz-card" id="accordion-one">
+            <div class="card-header flex-wrap">
+                <div>
+                    <h4 class="card-title">Gestion des Bordereaux Administratifs</h4>
+                </div>
+                
+            </div>
+            <!--tab-content-->
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="Preview" role="tabpanel" aria-labelledby="home-tab">
+                 <div class="card-body pt-0">
+                    <div class="table-responsive"> 
+                  
+                        <table id="user-tbl" class="table shorting">
+                            <thead>
+                            <tr>
+                                <th>Numero Ordre</th>
+                                <th>Parametres</th>
+                                <th>Type Echantillon</th>
+                                <th>Proprietaire</th>
+                                <th>Ajouter Par</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for fr in ba %}
+                            <tr>
+
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <p class="mb-0 ms-2">{{fr.numero_ordre}} </p>	
+                                    </div>
+                                </td>
+                                <td>{{fr.parametre}}</td>
+                                <td>{{fr.type_echantillon}}</td>
+                                <td>{{fr.client.prenom}} {{fr.client.nom}}</td>
+                                <td>{{fr.user.admin.first_name}} {{fr.user.admin.last_name}}</td>
+                                <td>{{fr.date | date:"d/m/Y"}}</td>
+                                <td>
+                                     <a class="btn btn-success btn-sm" href="#">Voir</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                        
+                    </table>
+                </div>
+               </div>
+            </div>
+        
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock main %}

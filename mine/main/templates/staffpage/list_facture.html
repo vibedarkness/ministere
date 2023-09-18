@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Liste Facture{% endblock title %}
+
+
+{% block main %}
+
+<div class="row">
+    <div class="d-flex align-items-center">
+        <a href="{% url 'add_facture' %}" class="btn btn-primary btn-sm ms-2">+ Ajouter Facture</a>
+    </div>
+
+    <br>
+    <div class="col-xl-12">
+        <div class="card dz-card" id="accordion-one">
+            <div class="card-header flex-wrap">
+                <div>
+                    <h4 class="card-title">Gestion des Factures</h4>
+                </div>
+                
+            </div>
+            <!--tab-content-->
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="Preview" role="tabpanel" aria-labelledby="home-tab">
+                 <div class="card-body pt-0">
+                    <div class="table-responsive"> 
+                  
+                        <table id="user-tbl" class="table shorting">
+                            <thead>
+                            <tr>
+                                <th>Numero</th>
+                                <th>Proprietaire</th>
+                                <th>Ajouter Par</th>
+                                <th>Date</th>
+                                <th>Total en Cfa</th>
+                                <th>Actions</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for fr in invoice %}
+                            <tr>
+
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <p class="mb-0 ms-2">{{fr.id}} </p>	
+                                    </div>
+                                </td>
+
+                                <td>{{fr.client.prenom}} {{fr.client.nom}}</td>
+                                <td>{{fr.user.admin.first_name}} {{fr.user.admin.last_name}}</td>
+                                <td>{{fr.date_creation | date:"d/m/Y"}}</td>
+                                <td>{{fr.total}}</td>
+                                <td>
+                                                        <a class="btn btn-success btn-sm" href="{% url 'facture_view' pk=fr.pk %}">Voir</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                        
+                    </table>
+                </div>
+               </div>
+            </div>
+        
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock main %}

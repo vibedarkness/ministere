@@ -1,0 +1,58 @@
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="sexampleModalLabel"
+   aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title text-dark" id="sexampleModalLabel">Signature Invoice</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <form id="myForm" method="post">
+               {% csrf_token %}
+               <input name="id" type="hidden" id="purchase_recept" value="{{ purchase_recept.id }}">
+               <label  class="text-dark checkbox-inline"> <strong id="strong_id_s">Choisir Signature</strong></label>
+               <select name="signature" class="form-control" id="customer">
+                <option> Choose Your Signature ... </option>
+                {% for sg in signature %}
+
+                <option style="width: 50px; height: 50px;" value="{{sg.id}}">{{sg.sign}}</option>
+                {% endfor %}
+            </select>
+
+               <div class="modal-footer">
+                  <button type="submit" class="btn btn-danger">Soumettre</button>
+               </div>
+            </form>
+         </div>
+
+      </div>
+   </div>
+</div>
+
+
+
+<script>
+
+$(document).ready(function() {
+    $("#myForm").submit(function(event) {
+        event.preventDefault(); 
+        $.ajax({
+            type: "POST",
+            url: "", 
+            data: $(this).serialize(),
+            success: function(data) {
+
+                alert("Signature ajouter soumis avec succès !");
+
+                $("#myModal").modal("hide");
+            },
+            error: function() {
+
+                alert("Une erreur s'est produite.");
+            }
+        });
+    });
+});
+</script>
