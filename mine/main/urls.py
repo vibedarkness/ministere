@@ -11,6 +11,14 @@ urlpatterns = [
     path('add_staff',HodViews.add_staff,name="add_staff"),
     path('add_staff_save',HodViews.add_staff_save,name="add_staff_save"),
     path('staff_list',HodViews.list_staff,name="staff_list"),
+    path('facture_admin/<int:pk>', HodViews.InvoiceVisualizationView.as_view(), name='facture_view_admin'),
+    path("list_facture_admin",HodViews.list_facture,name='list_facture_admin'),
+    path('facture_pdf_admin/<int:id>',HodViews.get_invoice_final_pdf, name="facture_pdf_admin"),
+    path("client_list_admin",HodViews.client_list,name='client_list_admin'),
+    path("list_ba_admin",HodViews.list_ba,name='list_ba_admin'),
+
+
+
 
 
 
@@ -25,8 +33,6 @@ urlpatterns = [
     path("add_ba",StaffViews.get_ba,name='add_ba'),
     path('facture/<int:pk>', StaffViews.InvoiceVisualizationView.as_view(), name='facture_view'),
     path('generate-qr/', StaffViews.generate_qr, name='generate_qr'),
-
-
-
+    path('facture_pdf/<int:id>', StaffViews.get_invoice_final_pdf, name="facture_pdf")
 
 ]

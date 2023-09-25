@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "main",
+    'wkhtmltopdf',
 ]
 
 MIDDLEWARE = [
@@ -124,3 +125,13 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL="main.CustomUser"
+
+WKHTMLTOPDF_CMD = 'C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe'
+
+WKHTMLTOPDF_CMD_OPTIONS = {
+    'quiet': True,
+}
+
+PDFKIT_CONFIG = {
+    'wkhtmltopdf': 'C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe',  # Remplacez '/chemin/vers/wkhtmltopdf' par le chemin absolu de l'exécutable wkhtmltopdf sur votre système
+}

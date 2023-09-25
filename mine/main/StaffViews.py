@@ -21,6 +21,8 @@ from django.template.loader import get_template
 import json
 from django.contrib.auth.decorators import login_required
 
+import pdfkit
+
 
 
 
@@ -236,3 +238,43 @@ def generate_qr(request):
     response = HttpResponse(content_type="image/png")
     img.save(response, "PNG")
     return response
+
+
+
+
+def get_invoice_final_pdf(request, *args, **kwargs):
+    """ generate pdf file from html file """
+
+    id = kwargs.get('id')
+
+    context = get_invoice(id)
+
+    context['date'] = datetime.datetime.today()
+
+    # get html file
+    template = get_template('staffpage/facture_pdf.html')
+
+    # render html with context variables
+
+    html = template.render(context)
+
+    # options of pdf format
+
+    options = {
+        'page-size': 'Letter',
+        'encoding': 'UTF-8',
+        "enable-local-file-access":True,
+        
+    }
+
+    # generate pdf
+    config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
+    pdf = pdfkit.from_string(html, False, options=options,configuration=config)
+
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+
+    response['Content-Disposition'] = "attachement"
+
+    return response
+

@@ -6,6 +6,11 @@ from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from main.forms import *
 from django.contrib.auth.decorators import login_required
+from main.sup import *
+from django.views import View
+import pdfkit
+import datetime
+from django.template.loader import get_template
 
 
 @login_required(login_url='/')
@@ -53,3 +58,93 @@ def list_staff(request):
     }
 
     return render(request,"adminpage/list_staff.html", context)
+
+
+
+@login_required(login_url='/')
+def list_facture(request):
+
+    invoice = Invoice.objects.all()
+
+    context = {
+        'invoice': invoice,
+    }
+
+    return render(request,"adminpage/list_facture.html", context)
+
+
+class InvoiceVisualizationView(View):
+
+    template_name = 'adminpage/facture_view.html'
+
+    def get(self, request, *args, **kwargs):
+
+        pk = kwargs.get('pk')
+
+        context = get_invoice(pk)
+
+        return render(request, self.template_name, context)
+
+
+
+def get_invoice_final_pdf(request, *args, **kwargs):
+    """ generate pdf file from html file """
+
+    id = kwargs.get('id')
+
+    context = get_invoice(id)
+
+    context['date'] = datetime.datetime.today()
+
+    # get html file
+    template = get_template('adminpage/facture_pdf.html')
+
+    # render html with context variables
+
+    html = template.render(context)
+
+    # options of pdf format
+
+    options = {
+        'page-size': 'Letter',
+        'encoding': 'UTF-8',
+        "enable-local-file-access":True,
+        
+    }
+
+    # generate pdf
+    config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
+    pdf = pdfkit.from_string(html, False, options=options,configuration=config)
+
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+
+    response['Content-Disposition'] = "attachement"
+
+    return response
+
+
+
+@login_required(login_url='/')
+def client_list(request):
+
+    client = Client.objects.all()
+
+    context = {
+        'client': client,
+    }
+
+    return render(request,"adminpage/list_client.html", context)
+
+
+@login_required(login_url='/')
+def list_ba(request):
+
+    ba = BordereauAdministratif.objects.all()
+
+    context = {
+        'ba': ba,
+    }
+
+    return render(request,"adminpage/list_ba.html", context)
+

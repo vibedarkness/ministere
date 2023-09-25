@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta name="keywords" content="">
+	<meta name="author" content="">
+	<meta name="robots" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+ <meta property="og:description" content="Yeshadmin:Customer Relationship Management Admin Bootstrap 5 Template">
+	<meta property="og:image" content="https://yeshadmin.dexignzone.com/xhtml/social-image.png">
+	<meta name="format-detection" content="telephone=no">
+
+	<!-- PAGE TITLE HERE -->
+	<title>{% block title %}{% endblock title %}</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+	<!-- tagify-css -->
+
+	<!-- Style css -->
+
+</head>
+<body>
+
+       
+
+
+
+<div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="card mt-3">
+                            
+                            <div class="card-body">
+                                     <div  class="d-flex mb-5">
+                                    
+                                    <div style="line-height: 1em; margin-left: 20px; margin-top: 20px">
+                                        <h3 style="line-height: 1em; margin-left: 20px;"> REPUBLIQUE DU SENEGAL <img style="width: 30px; height: 20px;" src="http://127.0.0.1:8000/static/images/senegal.png" alt="" > N° </h3>
+                                        <p style="line-height: 0.5em; margin-left: 60px;">Un Peuple Un But Une Foi</p>
+                                        <p style="line-height: 0.2em; margin-left: 100px;">**********</p>
+                                        <h3 style="line-height: 1em;">MINISTERE DES MINES</h3>
+                                        <h3 style="line-height: 0.1em; margin-left: 15px;">ET DE LA GEOLOGIE</h3>
+                                        <p style="line-height: 2em; margin-left: 80px;"> <strong> ********** </strong></p>
+                                        
+                                        <h3 style="line-height: 0.1em; ">DIRECTION DE LA GEOLOGIE</h3>
+                                        <p style="line-height: 1em; margin-left: 80px;"> <strong> ********** </strong></p>
+
+                                        <h3 style="line-height: 1em;">DIVISION DU GROUPE DES</h3>
+                                        <h3 style="line-height: 0.1em; ">LABORATOIRES D'ANALYSES</h3>
+                                        <h3 style="line-height: 1em;margin-left: 60px;"><i class="fas fa-phone"></i> 33 868 69 94</h3>
+
+
+                                    </div>
+
+                                        <div class="row align-items-center">
+
+                                            <div style="width: 180px; height: 180px; margin-left: 900px;margin-top: -250px" class="col-sm-3 mt-3"> 
+                                                <h4 style="margin-top: -250px">/MMG/DGéol/GLA/</h4>
+                                                <p style="line-height: 0.5em; ">Dakar, le {{ obj.date_creation | date:"d/m/Y"}}</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <div class="d-flex justify-content-center font-roboto">
+  <h2 style="text-align:center;"> <u> Facture N° 000{{ obj.id }} </u></h2>
+  <br>
+</div>
+<div  style="width: 350px;height: 100px; border: 1px solid black; border-radius: 25px; margin-left: 200px;">
+    <h4 style="line-height: 1em; margin-top: 10px; margin-left: 10px;">Nom du Client : {{ obj.client.prenom }} {{ obj.client.nom }}</h4><br>
+    <h4 style="line-height: 0.1em;margin-left: 10px; ">Adresse :  {{ obj.client.adresse}}</h4><br>
+    <h4 style="line-height: 1em; margin-left: 10px;"><i class="fas fa-phone"></i>: {{ obj.client.telephone }}</h4><br>
+
+</div>
+                                <br><br>
+                                <div class="table-responsive" style="width: 900px; margin-left: 100px;">
+                                    <table class="table table-border">
+                                        <thead style="border: 1px solid black;">
+                                            <tr style="border: 1px solid black;">
+                                                
+                                                <th style="border: 1px solid black;">Designation</th>
+                                                <th class="center" style="border: 1px solid black;"> Poids en Grammes</th>
+                                                <th class="center" style="border: 1px solid black;"> Titre en caracts</th>
+                                                <th class="right" style="border: 1px solid black;">Prix Unitaire</th>
+                                                <th class="right" style="border: 1px solid black;">Total(FCfa)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody  style="border: 1px solid gray;">
+                                        {% for article in articles %}
+                                            <tr>
+                                                
+                                                <td class="left strong" style="border: 1px solid gray;">{{ article.name }} lingots</td>
+                                                <td class="right" style="border: 1px solid gray;">{{ article.quantity }}</td>
+                                                <td class="right" style="border: 1px solid gray;">{{ article.titre_en_caract }}</td>
+                                                <td class="center" style="border: 1px solid gray;">{{ article.unit_price}}</td>
+                                                <td class="right" style="border: 1px solid gray;">{{ article.get_total }}</td>
+                                            </tr>
+                                        {% endfor %}
+
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-5 col-sm-"> </div>
+                                    
+                                    <br>
+                                    <br>
+
+                                    <h5 style="margin-left: 40px;" >Arrete cette presente facture a la somme de : <strong>{{obj.get_total}} Fcfa({{obj.numwords}} )</strong> Francs cfa</h5>
+<br><br><br><br><br>
+
+                                    <div style="flex-direction: initial; margin: 80px;">
+
+                                    <img  style="width: 150px; height: 150px; " src="http://127.0.0.1:8000/generate-qr" alt="profile picture">
+                                   
+
+                                    </div>
+
+                                    <br><br><br><br><br><br><br>
+
+
+                                    <hr style="color:black;">
+                                    <p style="text-align: center;" > IST Avenue Cheikh Anta Diop *ex batiment BRGM 2éme étage tel: 33 868 69 94 *Dakar-senegal <br><br> <strong> EmaiL GLA</strong> <u>:Aminata.diouf@minesgeologie.gouv.sn <br> gla@minesgeologie.gouv.sn </u></p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+</body>
+</html>
