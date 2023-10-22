@@ -43,7 +43,7 @@
                                      <div  class="d-flex mb-5">
                                     
                                     <div style="line-height: 1em; margin-left: 20px; margin-top: 20px">
-                                        <h3 style="line-height: 1em; margin-left: 20px;"> REPUBLIQUE DU SENEGAL <img style="width: 30px; height: 20px;" src="http://127.0.0.1:8000/static/images/senegal.png" alt="" > N° </h3>
+                                        <h3 style="line-height: 1em; margin-left: 20px;"> REPUBLIQUE DU SENEGAL <img style="width: 30px; height: 20px; margin-left:200px;" src="http://127.0.0.1:8000/static/images/senegal.png" alt="" > N° </h3>
                                         <p style="line-height: 0.5em; margin-left: 60px;">Un Peuple Un But Une Foi</p>
                                         <p style="line-height: 0.2em; margin-left: 100px;">**********</p>
                                         <h3 style="line-height: 1em;">MINISTERE DES MINES</h3>
@@ -62,7 +62,7 @@
 
                                         <div class="row align-items-center">
 
-                                            <div style="width: 180px; height: 180px; margin-left: 900px;margin-top: -250px" class="col-sm-3 mt-3"> 
+                                            <div style="width: 180px; height: 180px; margin-left: 500px;margin-top: -250px" class="col-sm-3 mt-3"> 
                                                 <h4 style="margin-top: -250px">/MMG/DGéol/GLA/</h4>
                                                 <p style="line-height: 0.5em; ">Dakar, le {{ obj.date_creation | date:"d/m/Y"}}</p>
 
@@ -102,7 +102,7 @@
                                         {% for article in articles %}
                                             <tr>
                                                 
-                                                <td class="left strong" style="border: 1px solid gray;">{{ article.name }} lingots</td>
+                                                <td class="left strong" style="border: 1px solid gray;">{{ article.name }}</td>
                                                 <td class="right" style="border: 1px solid gray;">{{ article.quantity }}</td>
                                                 <td class="right" style="border: 1px solid gray;">{{ article.titre_en_caract }}</td>
                                                 <td class="center" style="border: 1px solid gray;">{{ article.unit_price}}</td>
