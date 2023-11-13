@@ -84,6 +84,26 @@ class InvoiceVisualizationView(View):
         context = get_invoice(pk)
 
         return render(request, self.template_name, context)
+    
+
+
+
+class AttestationVisualizationView(View):
+
+    template_name = 'adminpage/attestation_facture.html'
+
+
+    def get(self, request, *args, **kwargs):
+
+        pk = kwargs.get('pk')
+
+        context = get_invoice(pk)
+
+        
+
+        return render(request, self.template_name, context)
+
+
 
 
 

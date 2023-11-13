@@ -80,6 +80,12 @@ def get_demande(request):
 
                 client = request.POST.get('client')
 
+                date_creation = request.POST.get('date_creation')
+                
+                date_fin = request.POST.get('date_fin')
+                
+                num_aggregation = request.POST.get('num_aggregation')
+
                 articles = request.POST.getlist('article')
 
                 qties = request.POST.getlist('qty')
@@ -100,6 +106,12 @@ def get_demande(request):
 
                     invoice_object = {
                         'client_id': client,
+
+                        'date_creation':date_creation,
+
+                        'date_fin':date_fin,
+
+                        'num_aggregation':num_aggregation,
                         
                         'user':user,
                         
@@ -124,12 +136,12 @@ def get_demande(request):
                         items.append(data)
 
                     created = Article.objects.bulk_create(items)   
-
+                    
                     if created:
                         messages.success(request, "Facture ajouter avec Success.") 
                     else:
                         messages.error(request, "Desolé echec de l'enregistrement veuillez verifier les données saisits.")    
-
+                        
             except Exception as e:
                 messages.error(request, f"Erreur: {e}.")   
 

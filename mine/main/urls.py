@@ -12,10 +12,12 @@ urlpatterns = [
     path('add_staff_save',HodViews.add_staff_save,name="add_staff_save"),
     path('staff_list',HodViews.list_staff,name="staff_list"),
     path('facture_admin/<int:pk>', HodViews.InvoiceVisualizationView.as_view(), name='facture_view_admin'),
+    path('attestation/<int:pk>', HodViews.AttestationVisualizationView.as_view(), name='attestation_view_admin'),
     path("list_facture_admin",HodViews.list_facture,name='list_facture_admin'),
     path('facture_pdf_admin/<int:id>',HodViews.get_invoice_final_pdf, name="facture_pdf_admin"),
     path("client_list_admin",HodViews.client_list,name='client_list_admin'),
     path("list_ba_admin",HodViews.list_ba,name='list_ba_admin'),
+    
 
 
 

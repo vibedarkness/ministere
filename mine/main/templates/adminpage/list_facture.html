@@ -49,7 +49,9 @@
                                 <td>{{fr.date_creation | date:"d/m/Y"}}</td>
                                 <td>{{fr.total}}</td>
                                 <td>
-                                                        <a class="btn btn-success btn-sm" href="{% url 'facture_view_admin' pk=fr.pk %}">Voir</a>
+                                                        <a class="btn btn-success btn-sm" href="{% url 'facture_view_admin' pk=fr.pk %}">Facture</a>
+                                                        <a class="btn btn-success btn-sm" href="{% url 'attestation_view_admin' pk=fr.pk %}">Attestation</a>
+
                                 </td>
                             </tr>
                             {% endfor %}

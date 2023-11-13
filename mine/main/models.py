@@ -3,6 +3,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
 from num2words import num2words
+from django.db.models import Sum
 
 class CustomUser(AbstractUser):
     user_type_data=((1,"HOD"),(2,"Staff"))
@@ -41,12 +42,27 @@ class Client(models.Model):
             return "Monsieur"
         elif self.sexe=="Feminin":
             return "Madame"
+        
+
+    @property
+    def get_total_quantities(self):
+        articles = self.article_set.all()   
+        total_quantities = sum(article.quantity for article in articles)
+        return total_quantities
+
+    @property
+    def get_total_poids(self):
+        articles = self.article_set.all()   
+        total_poids = sum(article.titre_en_caract for article in articles)
+        return total_poids    
 
 
 class Invoice(models.Model):
     client=models.ForeignKey(Client, on_delete=models.PROTECT)
     total = models.DecimalField(max_digits=1000, decimal_places=2,null=True, default=0)
-    date_creation = models.DateTimeField(auto_now=False, auto_now_add=True,null=True, )
+    date_creation = models.DateField(auto_now=False, auto_now_add=False,null=True, )
+    date_fin = models.DateField(auto_now=False, auto_now_add=False,null=True, )
+    num_aggregation=models.CharField(max_length=200,null=True,default="")
     status = models.SmallIntegerField(default=0, null=True)
     user=models.ForeignKey(Staff,on_delete=models.PROTECT, related_name="secretary_rept", null=True, default=2)
 
@@ -57,6 +73,21 @@ class Invoice(models.Model):
         articles = self.article_set.all()   
         total = sum(article.get_total for article in articles)
         return total
+    
+
+
+    @property
+    def get_total_quantities(self):
+        articles = self.article_set.all()   
+        total_quantities = sum(article.quantity for article in articles)
+        return total_quantities
+    
+
+    @property
+    def get_total_poids(self):
+        articles = self.article_set.all()   
+        total_poids = sum(article.titre_en_caract for article in articles)
+        return total_poids
 
     def numwords(self):
         articles = self.article_set.all()
@@ -67,13 +98,11 @@ class Invoice(models.Model):
 
 
 
-
-
 class Article(models.Model):
     
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
 
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=100, null=True, default="Lingots D'or")
     
     titre_en_caract=models.IntegerField()
 
@@ -91,6 +120,9 @@ class Article(models.Model):
     def get_total(self):
         total = self.quantity * self.unit_price   
         return total 
+    
+
+
 
 
 class BordereauAdministratif(models.Model):
