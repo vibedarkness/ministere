@@ -230,8 +230,8 @@ def list_ba(request):
 
 
 def generate_qr(request):
-    values_from_database = Invoice.objects.all()
-    qr_code_data = f"Demandeur: {values_from_database[0].client.prenom} { values_from_database[0].client.nom}\nAdresse: {values_from_database[0].client.adresse}\nTelephone: {values_from_database[0].client.telephone})"
+    values_from_database = Article.objects.all()
+    qr_code_data = f"Demandeur: {values_from_database[0].invoice.client.prenom} { values_from_database[0].invoice.client.nom}\nAdresse: {values_from_database[0].invoice.client.adresse}\nTelephone: {values_from_database[0].invoice.client.telephone}\nNumero Aggregation:{values_from_database[0].invoice.num_aggregation}\nTitre en Caracts:{values_from_database[0].titre_en_caract}\nQuantite:{values_from_database[0].quantity}\nTotal:{values_from_database[0].get_total})"
 
 
 

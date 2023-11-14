@@ -15,6 +15,8 @@ urlpatterns = [
     path('attestation/<int:pk>', HodViews.AttestationVisualizationView.as_view(), name='attestation_view_admin'),
     path("list_facture_admin",HodViews.list_facture,name='list_facture_admin'),
     path('facture_pdf_admin/<int:id>',HodViews.get_invoice_final_pdf, name="facture_pdf_admin"),
+    path('attestation_pdf_admin/<int:id>',HodViews.get_attestation_final_pdf, name="attestation_pdf_admin"),
+
     path("client_list_admin",HodViews.client_list,name='client_list_admin'),
     path("list_ba_admin",HodViews.list_ba,name='list_ba_admin'),
     

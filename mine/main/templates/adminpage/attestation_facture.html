@@ -10,14 +10,14 @@
 
                         <div class="card mt-3">
                             <div class="card-header"> <strong></strong> <span class="float-end">
-                                    <a  href="{% url 'facture_pdf_admin' id=obj.id %} " class="btn btn-info">
+                                    <a  href="{% url 'attestation_pdf_admin' id=obj.id %} " class="btn btn-info">
     										<i class="icon-printer"></i> PDF
     									</a></span> </div>
                             <div class="card-body">
                                      <div  class="d-flex mb-5">
                                     
                                     <div style="line-height: 1em; margin-left: 20px; margin-top: 20px">
-                                        <h3 style="line-height: 1em; margin-left: 20px;"> REPUBLIQUE DU SENEGAL <img style="width: 30px; height: 20px;" src="{% static "images/senegal.png" %}" alt="" > N° </h3>
+                                        <h3 style="line-height: 1em; margin-left: 20px;"> REPUBLIQUE DU SENEGAL <img style="width: 30px; height: 20px;" src="{% static "images/senegal.png" %}" alt="" > N° 0{{ obj.id }}</h3>
                                         <p style="line-height: 0.5em; margin-left: 60px;">Un Peuple Un But Une Foi</p>
                                         <p style="line-height: 0.2em; margin-left: 100px;">**********</p>
                                         <h3 style="line-height: 1em;">MINISTERE DES MINES</h3>
@@ -46,7 +46,7 @@
 
                                 </div>
                                 <div class="d-flex justify-content-center font-roboto">
-  <h2> <u> Attestation N° 000{{ obj.id }} </u></h2>
+  <h2> <u> Attestation </u></h2>
   
   
 

@@ -28,7 +28,8 @@
                                 <th>Numero</th>
                                 <th>Proprietaire</th>
                                 <th>Ajouter Par</th>
-                                <th>Date</th>
+                                <th>Date Debut</th>
+                                <th>Date Fin</th>
                                 <th>Total en Cfa</th>
                                 <th>Actions</th>
                                 
@@ -47,6 +48,7 @@
                                 <td>{{fr.client.prenom}} {{fr.client.nom}}</td>
                                 <td>{{fr.user.admin.first_name}} {{fr.user.admin.last_name}}</td>
                                 <td>{{fr.date_creation | date:"d/m/Y"}}</td>
+                                <td>{{fr.date_fin | date:"d/m/Y"}}</td>
                                 <td>{{fr.total}}</td>
                                 <td>
                                                         <a class="btn btn-success btn-sm" href="{% url 'facture_view_admin' pk=fr.pk %}">Facture</a>
