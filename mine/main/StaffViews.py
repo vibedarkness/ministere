@@ -45,11 +45,12 @@ def add_client_save(request):
             telephone=form.cleaned_data["telephone"]
             email=form.cleaned_data["email"]
             sexe=form.cleaned_data["sexe"]
+            num_aggregation=form.cleaned_data["num_aggregation"]
             staff= get_object_or_404(Staff, admin_id=request.user.id)
             try:
-                client=Client(staff=staff,nom=nom,prenom=prenom,adresse=adresse,telephone=telephone,email=email,sexe=sexe)
+                client=Client(staff=staff,nom=nom,prenom=prenom,adresse=adresse,telephone=telephone,email=email,sexe=sexe,num_aggregation=num_aggregation)
                 client.save()
-                messages.success(request,"Client Ajouter avec Success")
+                messages.success(request,"Client Ajouté avec Succés")
                 return HttpResponseRedirect(reverse("add_client"))
             except Exception as e:
                 messages.error(request,"Echec de l'ajout" + str(e))
@@ -83,8 +84,6 @@ def get_demande(request):
                 date_creation = request.POST.get('date_creation')
                 
                 date_fin = request.POST.get('date_fin')
-                
-                num_aggregation = request.POST.get('num_aggregation')
 
                 articles = request.POST.getlist('article')
 
@@ -110,8 +109,6 @@ def get_demande(request):
                         'date_creation':date_creation,
 
                         'date_fin':date_fin,
-
-                        'num_aggregation':num_aggregation,
                         
                         'user':user,
                         
@@ -231,24 +228,31 @@ def list_ba(request):
 
 def generate_qr(request):
     values_from_database = Article.objects.all()
-    qr_code_data = f"Demandeur: {values_from_database[0].invoice.client.prenom} { values_from_database[0].invoice.client.nom}\nAdresse: {values_from_database[0].invoice.client.adresse}\nTelephone: {values_from_database[0].invoice.client.telephone}\nNumero Aggregation:{values_from_database[0].invoice.num_aggregation}\nTitre en Caracts:{values_from_database[0].titre_en_caract}\nQuantite:{values_from_database[0].quantity}\nTotal:{values_from_database[0].get_total})"
 
+    qr_codes = []  # Stockez les codes QR générés
 
+    for index, article in enumerate(values_from_database):
+        qr_code_data = f"Demandeur: {article.invoice.client.prenom} {article.invoice.client.nom}\nAdresse: {article.invoice.client.adresse}\nTelephone: {article.invoice.client.telephone}\nTitre en Caracts:{article.titre_en_caract}\nQuantite:{article.quantity}\nTotal:{article.get_total}"
 
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
-    )
-    qr.add_data(qr_code_data)
-    qr.make(fit=True)
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(qr_code_data)
+        qr.make(fit=True)
 
+        img = qr.make_image(fill_color="black", back_color="white")
 
-    img = qr.make_image(fill_color="black", back_color="white")
+        # Stockez l'image ou envoyez-la directement au client si nécessaire
+        qr_codes.append(img)
 
+    # Vous pouvez renvoyer les codes QR générés dans une seule réponse ou les stocker
+    # pour une utilisation ultérieure, en fonction de vos besoins.
     response = HttpResponse(content_type="image/png")
-    img.save(response, "PNG")
+    qr_codes[0].save(response, "PNG")  # Vous pouvez ajuster cela en fonction de votre logique.
+
     return response
 
 
@@ -290,3 +294,56 @@ def get_invoice_final_pdf(request, *args, **kwargs):
 
     return response
 
+
+class BordereauVisualizationView(View):
+
+    template_name = 'staffpage/bordereau.html'
+
+
+    def get(self, request, *args, **kwargs):
+
+        pk = kwargs.get('pk')
+
+        context = get_invoice(pk)
+
+        
+
+        return render(request, self.template_name, context)
+
+
+
+def get_bordereau_final_pdf(request, *args, **kwargs):
+    """ generate pdf file from html file """
+
+    id = kwargs.get('id')
+
+    context = get_invoice(id)
+
+    context['date'] = datetime.datetime.today()
+
+    # get html file
+    template = get_template('staffpage/bordereau_pdf.html')
+
+    # render html with context variables
+
+    html = template.render(context)
+
+    # options of pdf format
+
+    options = {
+        'page-size': 'Letter',
+        'encoding': 'UTF-8',
+        "enable-local-file-access":True,
+        
+    }
+
+    # generate pdf
+    config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
+    pdf = pdfkit.from_string(html, False, options=options,configuration=config)
+
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+
+    response['Content-Disposition'] = "attachement"
+
+    return response

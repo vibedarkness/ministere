@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta name="keywords" content="">
+	<meta name="author" content="">
+	<meta name="robots" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+ <meta property="og:description" content="Yeshadmin:Customer Relationship Management Admin Bootstrap 5 Template">
+	<meta property="og:image" content="https://yeshadmin.dexignzone.com/xhtml/social-image.png">
+	<meta name="format-detection" content="telephone=no">
+
+	<!-- PAGE TITLE HERE -->
+	<title>{% block title %}{% endblock title %}</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+	<!-- tagify-css -->
+
+	<!-- Style css -->
+
+</head>
+<body>
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="card mt-3">
+                
+                
+                    <div class="d-flex justify-content-center font-roboto">
+
+</div>
+<div  style="width: 400px;height: 150px; border: 1px solid black; border-radius: 25px; margin-left: 100px; margin-top: 100px;">
+<h4 style="line-height: 1em; margin-top: 10px; margin-left: 10px;">Nom du Client : {{ obj.client.prenom }} {{ obj.client.nom }}</h4><br>
+<h4 style="line-height: 0.1em;margin-left: 10px; ">Adresse :  {{ obj.client.adresse}}</h4><br>
+<h4 style="line-height: 1em; margin-left: 10px;">Telephone: {{ obj.client.telephone }}</h4><br>
+
+</div>
+<br><br><br><br>
+<div style="width: 500px; margin-left: 300px;">
+<h3>MADAME CISS CHEF DU GROUPE DES LABORATOIRES D'ANALYSES DU MINISTERE DES MINES ET DE LA GEOLOGIE</h3>
+</div>
+
+                    <br><br><br><br><br><br>
+                    
+                    <div class="row">
+                        <h4 style="margin-left: 80px;"><u>Objet:</u> Demande de Test</h4>
+                        <br><br>
+                        <h5 style="margin-left: 80px;" >Je viens par cette presente demander un test de contrôle des métaux précieux sur <strong>{{obj.get_total_quantities}} lingots</strong></h5>
+
+
+                        <div style="flex-direction: initial; margin: 80px;">
+                       <h4>Bonne Reception</h4>
+                       <h4>DEMANDEUR</h4>
+                       <p style="line-height: 0.5em; margin-left: 700px;">Dakar, le {{ obj.date_creation | date:"d/m/Y"}}</p>
+
+                        </div>
+
+
+
+
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

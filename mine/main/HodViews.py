@@ -209,3 +209,57 @@ def list_ba(request):
 
     return render(request,"adminpage/list_ba.html", context)
 
+
+
+
+class BordereauAdminVisualizationView(View):
+
+    template_name = 'adminpage/bordereau_admin.html'
+
+
+    def get(self, request, *args, **kwargs):
+
+        pk = kwargs.get('pk')
+
+        context = get_invoice(pk)
+
+        
+
+        return render(request, self.template_name, context)
+
+
+def get_bordereau_admin_final_pdf(request, *args, **kwargs):
+    """ generate pdf file from html file """
+
+    id = kwargs.get('id')
+
+    context = get_invoice(id)
+
+    context['date'] = datetime.datetime.today()
+
+    # get html file
+    template = get_template('adminpage/bordereau_admin_pdf.html')
+
+    # render html with context variables
+
+    html = template.render(context)
+
+    # options of pdf format
+
+    options = {
+        'page-size': 'Letter',
+        'encoding': 'UTF-8',
+        "enable-local-file-access":True,
+        
+    }
+
+    # generate pdf
+    config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
+    pdf = pdfkit.from_string(html, False, options=options,configuration=config)
+
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+
+    response['Content-Disposition'] = "attachement"
+
+    return response

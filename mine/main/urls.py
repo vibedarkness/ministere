@@ -13,18 +13,13 @@ urlpatterns = [
     path('staff_list',HodViews.list_staff,name="staff_list"),
     path('facture_admin/<int:pk>', HodViews.InvoiceVisualizationView.as_view(), name='facture_view_admin'),
     path('attestation/<int:pk>', HodViews.AttestationVisualizationView.as_view(), name='attestation_view_admin'),
+    path('bordereau_admin/<int:pk>', HodViews.BordereauAdminVisualizationView.as_view(), name='bordereau_view_admin'),
     path("list_facture_admin",HodViews.list_facture,name='list_facture_admin'),
     path('facture_pdf_admin/<int:id>',HodViews.get_invoice_final_pdf, name="facture_pdf_admin"),
     path('attestation_pdf_admin/<int:id>',HodViews.get_attestation_final_pdf, name="attestation_pdf_admin"),
-
+    path('bordereau_admin_pdf/<int:id>',HodViews.get_bordereau_admin_final_pdf, name="bordereau_admin_pdf"),
     path("client_list_admin",HodViews.client_list,name='client_list_admin'),
     path("list_ba_admin",HodViews.list_ba,name='list_ba_admin'),
-    
-
-
-
-
-
 
     #==============Staff Urls========================
     path("staff",views.staffhome,name='staff_home'),
@@ -36,7 +31,9 @@ urlpatterns = [
     path("list_ba",StaffViews.list_ba,name='list_ba'),
     path("add_ba",StaffViews.get_ba,name='add_ba'),
     path('facture/<int:pk>', StaffViews.InvoiceVisualizationView.as_view(), name='facture_view'),
+    path('bordereau/<int:pk>', StaffViews.BordereauVisualizationView.as_view(), name='bordereau'),
     path('generate-qr/', StaffViews.generate_qr, name='generate_qr'),
-    path('facture_pdf/<int:id>', StaffViews.get_invoice_final_pdf, name="facture_pdf")
+    path('facture_pdf/<int:id>', StaffViews.get_invoice_final_pdf, name="facture_pdf"),
+    path('bordereau_pdf/<int:id>', StaffViews.get_bordereau_final_pdf, name="bordereau_pdf")
 
 ]

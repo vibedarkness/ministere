@@ -35,6 +35,7 @@ class Client(models.Model):
     telephone=models.CharField(max_length=200,unique=True)
     email=models.CharField(max_length=200,unique=True)
     sexe=models.CharField(max_length=200)
+    num_aggregation=models.CharField(max_length=200,null=True,default="")
     staff=models.ForeignKey(Staff, on_delete=models.CASCADE)
 
     def sexechange(self):
@@ -62,7 +63,6 @@ class Invoice(models.Model):
     total = models.DecimalField(max_digits=1000, decimal_places=2,null=True, default=0)
     date_creation = models.DateField(auto_now=False, auto_now_add=False,null=True, )
     date_fin = models.DateField(auto_now=False, auto_now_add=False,null=True, )
-    num_aggregation=models.CharField(max_length=200,null=True,default="")
     status = models.SmallIntegerField(default=0, null=True)
     user=models.ForeignKey(Staff,on_delete=models.PROTECT, related_name="secretary_rept", null=True, default=2)
 

@@ -80,13 +80,16 @@
   <br>
 </div>
 <br><h3 style="text-align: center;"> Test Qualificatif de controle des métaux Précieux</h3>
-<div  style="width: 450px;height: 150px; border: 1px solid black; border-radius: 25px; margin-left: 200px;">
+<div  style="width: 400px;height: auto; border: 1px solid black; border-radius: 25px; margin-left: 200px;">
     <h4 style="line-height: 1em; margin-top: 10px; margin-left: 10px;">Nom du Client : {{ obj.client.prenom }} {{ obj.client.nom }}</h4><br>
+    <h4 style="line-height: 1em; margin-left: 10px;">Référence de l'Aggrément n°: {{ obj.client.num_aggregation }}</h4><br>
+    <h4 style="line-height: 1em; margin-left: 10px;">MFB/DMC/DER/NDD</h4><br>
+    <h4 style="line-height: 1em; margin-left: 10px;">Du 08 février 2023</h4><br>
     <h4 style="line-height: 0.1em;margin-left: 10px; ">Adresse :  {{ obj.client.adresse}}</h4><br>
     <h4 style="line-height: 1em; margin-left: 10px;"><i class="fas fa-phone"></i>: {{ obj.client.telephone }}</h4><br>
 
 </div>
-                                <br><br>
+<br><br><br><br><br><br>
                                 <div class="container">
                                     <h3 style="margin-left: 150px;">Je Soussignée  <strong> Madame Aminata Diouf Ciss</strong> , Chef du <strong>Groupe des Laboratoires d'Analyses(GLA) du Ministére des Mines et de la Géologie </strong>atteste avoir reçu de <strong> {{obj.client.sexechange}}  {{ obj.client.prenom }} {{ obj.client.nom }} {{obj.get_total_quantities}} lingots </strong> en or d'un poids total <strong>de {{obj.get_total_poids}} grammes </strong> <br>pour controle.</h3>
                                     <h3 style="margin-left: 150px;">Apres Expertise des lingots il a été trouvé qu'ils sont en or dont : </h3><br>
