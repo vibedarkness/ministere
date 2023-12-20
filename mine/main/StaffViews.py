@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction 
 from main.sup import *
 import qrcode
-
+from PIL import Image
 import random
 import string
 from main.models import *
@@ -226,32 +226,33 @@ def list_ba(request):
 
 
 
-def generate_qr(request):
-    values_from_database = Article.objects.all()
+def generate_qr(request, invoice_id):
+    # Obtenez les articles liés à la facture choisie
+    values_from_database = Article.objects.filter(invoice__id=invoice_id)
 
-    qr_codes = []  # Stockez les codes QR générés
+    # Assurez-vous qu'il y a au moins un article lié à la facture
+    if not values_from_database.exists():
+        return HttpResponse("Aucun article trouvé pour cette facture.")
 
-    for index, article in enumerate(values_from_database):
-        qr_code_data = f"Demandeur: {article.invoice.client.prenom} {article.invoice.client.nom}\nAdresse: {article.invoice.client.adresse}\nTelephone: {article.invoice.client.telephone}\nTitre en Caracts:{article.titre_en_caract}\nQuantite:{article.quantity}\nTotal:{article.get_total}"
+    # Sélectionnez le premier article pour générer le code QR
+    article = values_from_database.first()
 
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(qr_code_data)
-        qr.make(fit=True)
+    qr_code_data = f"Demandeur: {article.invoice.client.prenom} {article.invoice.client.nom}\nAdresse: {article.invoice.client.adresse}\nTelephone: {article.invoice.client.telephone}\nTitre en Caracts:{article.titre_en_caract}\nQuantite:{article.quantity}\nTotal:{article.get_total}"
 
-        img = qr.make_image(fill_color="black", back_color="white")
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(qr_code_data)
+    qr.make(fit=True)
 
-        # Stockez l'image ou envoyez-la directement au client si nécessaire
-        qr_codes.append(img)
+    img = qr.make_image(fill_color="black", back_color="white")
 
-    # Vous pouvez renvoyer les codes QR générés dans une seule réponse ou les stocker
-    # pour une utilisation ultérieure, en fonction de vos besoins.
+    # Renvoyez l'image du code QR dans la réponse
     response = HttpResponse(content_type="image/png")
-    qr_codes[0].save(response, "PNG")  # Vous pouvez ajuster cela en fonction de votre logique.
+    img.save(response, "PNG")
 
     return response
 

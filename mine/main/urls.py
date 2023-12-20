@@ -32,7 +32,7 @@ urlpatterns = [
     path("add_ba",StaffViews.get_ba,name='add_ba'),
     path('facture/<int:pk>', StaffViews.InvoiceVisualizationView.as_view(), name='facture_view'),
     path('bordereau/<int:pk>', StaffViews.BordereauVisualizationView.as_view(), name='bordereau'),
-    path('generate-qr/', StaffViews.generate_qr, name='generate_qr'),
+    path('generate-qr/<int:invoice_id>/', StaffViews.generate_qr, name='generate_qr'),
     path('facture_pdf/<int:id>', StaffViews.get_invoice_final_pdf, name="facture_pdf"),
     path('bordereau_pdf/<int:id>', StaffViews.get_bordereau_final_pdf, name="bordereau_pdf")
 
