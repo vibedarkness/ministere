@@ -32,9 +32,10 @@
                                 <th>Nom</th>
                                 <th>Adresse</th>
                                 <th>Telephone</th>
-                                <th>Email</th>
                                 <th>Sexe</th>
                                 <th>Ajouter Par</th>
+                                <th>Num Aggrement</th>
+                                <th>Validité</th>
                                 <th>Actions</th>
                                 
                             </tr>
@@ -52,9 +53,12 @@
                                 <td>{{fr.nom}}</td>
                                 <td>{{fr.adresse}}</td>
                                 <td>{{fr.telephone}}</td>
-                                <td>{{fr.email}}</td>
                                 <td>{{fr.sexe}}</td>
                                 <td>{{fr.staff.admin.first_name}} {{fr.staff.admin.last_name}}</td>
+                                <td>{{fr.num_aggregation}}</td>
+                                <td class="{% if fr.date_aggregation_expiree %}rouge{% elif fr.date_aggregation is none %}orange{% else %}vert{% endif %}">
+                                    {{ fr.verifier_date_aggregation }}
+                                </td>
                                 <td>
                                     <div class="dropdown">
                                         <div class="btn-link" data-bs-toggle="dropdown" aria-expanded="false">
@@ -85,4 +89,11 @@
     </div>
 </div>
 
+<style>
+    .rouge { background-color: #ff0000; color: #9C0303; }
+    .orange { background-color: #ffa500; color: #F3A30F; }
+    .vert { background-color: #00ff00; color: #06A106; }
+    </style>
+
 {% endblock main %}
+

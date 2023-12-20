@@ -4,6 +4,8 @@ from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
 from num2words import num2words
 from django.db.models import Sum
+from django.utils import timezone
+from datetime import timedelta
 
 class CustomUser(AbstractUser):
     user_type_data=((1,"HOD"),(2,"Staff"))
@@ -29,6 +31,11 @@ class Staff(models.Model):
 
 
 class Client(models.Model):
+    COULEUR_VALIDITE_CHOICES = [
+        ('vert', 'Vert'),   # Couleur pour une date d'agrégation valide
+        ('rouge', 'Rouge'),  # Couleur pour une date d'agrégation expirée
+        ('orange', 'orange'),    # Couleur pour une date d'agrégation manquante
+    ]
     nom= models.CharField(max_length=200)
     prenom= models.CharField(max_length=200)
     adresse= models.CharField(max_length=200)
@@ -36,6 +43,8 @@ class Client(models.Model):
     email=models.CharField(max_length=200,unique=True)
     sexe=models.CharField(max_length=200)
     num_aggregation=models.CharField(max_length=200,null=True,default="")
+    date_aggregation=models.DateTimeField(null=True,auto_now=False, auto_now_add=True)
+    couleur_statut = models.CharField(max_length=10, choices=COULEUR_VALIDITE_CHOICES, default='vert')
     staff=models.ForeignKey(Staff, on_delete=models.CASCADE)
 
     def sexechange(self):
@@ -44,6 +53,24 @@ class Client(models.Model):
         elif self.sexe=="Feminin":
             return "Madame"
         
+    def verifier_date_aggregation(self):
+        if self.date_aggregation is not None:
+            duree_aggregation = timezone.now() - self.date_aggregation
+
+            if duree_aggregation >= timedelta(days=365):
+                self.date_aggregation_expiree = True
+                self.date_aggregation = timezone.now()
+                self.couleur_statut = 'rouge'
+                self.save()
+                return "Expiré"
+            else:
+                self.date_aggregation_expiree = False
+                self.couleur_statut = 'vert'
+                return "En cours de Validité"
+        else:
+            self.couleur_statut = 'orange'
+            # La date d'agrégation est manquante, vous pouvez traiter cela en conséquence
+            return "Date manquante."        
 
     @property
     def get_total_quantities(self):
