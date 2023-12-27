@@ -114,6 +114,14 @@
                                         {% endfor %}
 
 
+                                        <tr>
+                                            <td colspan="4" class="right" style="border: 1px solid gray;">Total Global</td>
+                                            <td class="right" style="border: 1px solid gray;">
+                                                {{obj.get_total}}
+                                            </td>
+                                        </tr>
+
+
 
                                         </tbody>
                                     </table>
@@ -130,7 +138,7 @@
                                     <div style="flex-direction: initial; margin: 80px;">
 
                                     <!-- <img  style="width: 150px; height: 150px; " src="http://127.0.0.1:8000/generate-qr" alt="profile picture"> -->
-                                    <img style="width: 150px; height: 150px;" src="http://127.0.0.1:8000/generate-qr/invoice_id=obj.id" alt="profile picture">
+                                    <img style="width: 150px; height: 150px;" src="http://127.0.0.1:8000/generate-qr/{{ obj.id }}" alt="profile picture">
 
                                     </div>
 
