@@ -100,7 +100,11 @@ class Invoice(models.Model):
         articles = self.article_set.all()   
         total = sum(article.get_total for article in articles)
         return total
-    
+    @property
+    def get_total_poids(self):
+        articles = self.article_set.all()   
+        total_poids = sum(article.titre_en_caract for article in articles)
+        return total_poids
 
 
     @property
@@ -108,6 +112,12 @@ class Invoice(models.Model):
         articles = self.article_set.all()   
         total_quantities = sum(article.quantity for article in articles)
         return total_quantities
+    
+    @property
+    def get_total_pu(self):
+        articles = self.article_set.all()   
+        total_pu = sum(article.unit_price for article in articles)
+        return total_pu
     
 
     @property

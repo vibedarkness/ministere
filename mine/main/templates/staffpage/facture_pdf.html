@@ -85,10 +85,10 @@
     <h4 style="line-height: 1em; margin-left: 10px;">MFB/DMC/DER/NDD</h4><br>
     <h4 style="line-height: 1em; margin-left: 10px;">Du 08 février 2023</h4><br>
     <h4 style="line-height: 0.1em;margin-left: 10px; ">Adresse :  {{ obj.client.adresse}}</h4><br>
-    <h4 style="line-height: 1em; margin-left: 10px;"><i class="fas fa-phone"></i>: {{ obj.client.telephone }}</h4><br>
+    <h4 style="line-height: 1em; margin-left: 10px;"><i class="fas fa-phone"></i>Tel: {{ obj.client.telephone }}</h4><br>
 
 </div>
-<br><br><br><br><br><br>
+<br><br><br>
                                 <div class="table-responsive" style="width: 900px; margin-left: 100px;">
                                     <table class="table table-border">
                                         <thead style="border: 1px solid black;">
@@ -114,12 +114,18 @@
                                         {% endfor %}
 
                                         <tr>
-                                            <td colspan="4" class="right" style="border: 1px solid gray;">Total Global</td>
-                                            <td class="right" style="border: 1px solid gray;">
-                                                {{obj.get_total}}
+                                            <td  style="border: 2px solid rgb(0, 0, 0);"><strong>Total Global</strong></td>
+                                            <td style="border: 2px solid rgb(0, 0, 0);">
+                                            <strong>{{obj.get_total_quantities}}</strong>
                                             </td>
-                                            <td class="right" style="border: 1px solid gray;">
-                                                {{obj.get_total}}
+                                            <td style="border: 2px solid rgb(0, 0, 0);">
+                                            <strong>{{obj.get_total_poids}}</strong>
+                                            </td>
+                                            <td style="border: 2px solid rgb(0, 0, 0);">
+                                            <strong>{{obj.get_total_pu}}</strong>
+                                            </td>
+                                            <td style="border: 2px solid rgb(0, 0, 0);">
+                                            <strong>{{obj.get_total}}</strong>
                                             </td>
                                         </tr>
 
@@ -129,12 +135,9 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-5 col-sm-"> </div>
-                                    
-                                    <br>
-                                    <br>
+
 
                                     <h5 style="margin-left: 40px;" >Arrete cette presente facture a la somme de : <strong>{{obj.get_total}} Fcfa({{obj.numwords}} )</strong> Francs cfa</h5>
-<br><br><br><br><br>
 
                                     <div style="flex-direction: initial; margin: 80px;">
 
@@ -144,11 +147,8 @@
 
                                     </div>
 
-                                    <br><br><br><br><br><br><br>
-
-
                                     <hr style="color:black;">
-                                    <p style="text-align: center;" > IST Avenue Cheikh Anta Diop *ex batiment BRGM 2éme étage tel: 33 868 69 94 *Dakar-senegal <br><br> <strong> EmaiL GLA</strong> <u>:Aminata.diouf@minesgeologie.gouv.sn <br> gla@minesgeologie.gouv.sn </u></p>
+                                    <p style="text-align: center;" > IST Avenue Cheikh Anta Diop *ex batiment BRGM 2éme étage tel: 33 868 69 94 *Dakar-senegal <br> <strong> EmaiL GLA</strong> <u>:Aminata.diouf@minesgeologie.gouv.sn <br> gla@minesgeologie.gouv.sn </u></p>
 
                                 </div>
                             </div>
