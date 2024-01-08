@@ -12,17 +12,17 @@
 									</div>
 									<div class="ms-2">
 										<h4>{{client}}</h4>
-										<p class="mb-0">Clients</p>
+										<h3 class="mb-8">Clients</h3>
 									</div>
 								</div>
-								<a href="javascript:void(0)"><i class="fa-solid fa-chevron-right text-danger"></i></a>
+								<a href="{% url "client_list_admin" %}"><i class="fa-solid fa-chevron-right text-danger"></i></a>
 							</div>
 						</div>
 					</div>
 					<div class="col-xl-3 col-md-6">
 						<div class="card bg-primary">
-							<div class="card-header border-0">
-								<h4 class="heading mb-0 text-white">Facture</h4>
+							<div class="card-header border-5">
+								<h1 class="heading mb-0 text-white">Facture</h1>
 							</div>
 							<div class="card-body">
 								<div class="d-flex justify-content-between">
@@ -33,11 +33,14 @@
 										
 									</div>
 									<div class="sales-bx">
-										<img src=" {% static " images/analytics/shopping.png" %}" alt="">
+										
 										<h4>{{argent}}</h4>
 										<span>FCFA</span>
 									</div>
+									<a href="{% url "list_facture_admin" %}"><i class="fa-solid fa-chevron-right text-danger"></i></a>
+
 								</div>
+								
 							</div>
 						</div>
 					</div>
@@ -60,7 +63,7 @@
 										</svg>
 									</div>
 									<div class="ms-2">
-										<h6 class="mb-0">Total Bordereau</h6><br>
+										<h3 class="mb-0">Total Bordereau</h3><br>
 										<h3>{{ba}}</h3>
 									</div>
 								</div>	
@@ -89,7 +92,7 @@
 		<canvas id="invoicesByMonthChart" width="400" height="200"></canvas>
 	</div>
 	<div id="container" style="width: 40%; margin-left: 100px;">
-		<canvas id="totalInvoicesByMonthChart" width="400" height="200"></canvas>
+		<canvas id="totalPricesByMonthChart" width="400" height="200"></canvas>
 	</div>
 
 </div>
@@ -185,17 +188,25 @@
 
 
 <!-- Montant total par mois  -->
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var ctx = document.getElementById('totalInvoicesByMonthChart').getContext('2d');
+        var ctx = document.getElementById('totalPricesByMonthChart').getContext('2d');
+
+        // Convertir les valeurs de datamonthprices en nombres
+        var datamonthpricesNumeric = {{ datamonthprices|default:"[]"|safe }};
+
+        // Si datamonthprices n'est pas défini, initialisez-le comme un tableau vide
+        if (!datamonthpricesNumeric) {
+            datamonthpricesNumeric = [];
+        }
+
         var myChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: {{ labelmonthtotal|safe }},
+                labels: {{ labelmonthprices|safe }},
                 datasets: [{
-                    label: 'Total des factures par mois',
-                    data: {{ datamonthtotal|safe }},
+                    label: 'Total des prix des articles par mois',
+                    data: datamonthpricesNumeric,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',  // Rouge
                         'rgba(54, 162, 235, 0.2)',  // Bleu
@@ -217,4 +228,12 @@
         });
     });
 </script>
+
+
+
+
+
+
+
+
 {% endblock main %}

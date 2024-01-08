@@ -65,7 +65,7 @@ def add_client_save(request):
 @transaction.atomic()
 def get_demande(request):
         
-        client = Client.objects.all()
+        client = Client.objects.filter(couleur_statut='vert', date_aggregation__gte=timezone.now() - timedelta(days=360))
         context = {
         'client': client,
             }

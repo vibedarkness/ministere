@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from main.EmailBackEnd import EmailBackEnd
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count,Sum
+from django.db.models import Count,Sum,F
 from django.db.models.functions import TruncYear,TruncMonth
 
 
@@ -49,19 +49,16 @@ def logout_user(request):
 
 @login_required(login_url='/')
 def adminhome(request):
-    client=Client.objects.all().count()
-    facture=Invoice.objects.all().count()
-    ba=BordereauAdministratif.objects.all().count()
+    client = Client.objects.all().count()
+    facture = Invoice.objects.all().count()
+    ba = BordereauAdministratif.objects.all().count()
     clients_with_invoice_count = Client.objects.annotate(num_invoices=Count('invoice')).order_by('-num_invoices')
 
-    # clients facture
+    # Graphique clients facturés
     labels = [client.prenom for client in clients_with_invoice_count]
     data = [client.num_invoices for client in clients_with_invoice_count]
-    objets = Invoice.objects.all()
 
-
-    #année
-
+    # Graphique par année
     invoices_by_year = (
         Invoice.objects.annotate(year=TruncYear('date_creation'))
         .values('year')
@@ -69,14 +66,10 @@ def adminhome(request):
         .order_by('year')
     )
 
-    # Préparer les données pour le graphique
     labelyear = [invoice['year'].year for invoice in invoices_by_year]
     datayear = [invoice['num_invoices'] for invoice in invoices_by_year]
 
-
-
-    #mois
-    
+    # Graphique par mois
     invoices_by_month = (
         Invoice.objects.annotate(month=TruncMonth('date_creation'))
         .values('month')
@@ -84,73 +77,118 @@ def adminhome(request):
         .order_by('month')
     )
 
-    # Préparer les données pour le graphique
     labelmonth = [invoice['month'].strftime('%B %Y') for invoice in invoices_by_month]
     datamonth = [invoice['num_invoices'] for invoice in invoices_by_month]
 
-
-    #Total par mois
-
-    invoices_by_month_total = (
-        Invoice.objects.annotate(month=TruncMonth('date_creation'))
+    # Graphique total par mois
+    prices_by_month = (
+        Article.objects.annotate(month=TruncMonth('invoice__date_creation'))
         .values('month')
-        .annotate(total_invoices=Sum('total'))
+        .annotate(total_prices=Sum(F('unit_price') * F('quantity')))
         .order_by('month')
     )
 
-    # Préparer les données pour le graphique circulaire
-    labelmonthtotal = [invoice['month'].strftime('%B %Y') for invoice in invoices_by_month_total]
-    datamonthtotal = [invoice['total_invoices'] for invoice in invoices_by_month_total]
+    labelmonthprices = [price['month'].strftime('%B %Y') for price in prices_by_month]
+    datamonthprices = [float(price['total_prices']) for price in prices_by_month]
 
 
     total = 0
 
-    for objet in objets:
+    for objet in Invoice.objects.all():
         total += objet.total
 
-    context={
-        'client':client,
-        'facture':facture,
-        'argent':total,
-        'ba':ba,
+    context = {
+        'client': client,
+        'facture': facture,
+        'argent': total,
+        'ba': ba,
 
         'clients': clients_with_invoice_count,
         'labels': labels,
         'data': data,
 
-        'labelyear':labelyear,
-        'datayear':datayear,
+        'labelyear': labelyear,
+        'datayear': datayear,
 
         'labelmonth': labelmonth,
         'datamonth': datamonth,
 
-        'labelmonthtotal': labelmonthtotal,
-        'datamonthtotal': datamonthtotal,
-
+        'labelmonthtotal': labelmonthprices,
+        'datamonthtotal': datamonthprices,
     }
 
-    return render(request,'adminpage/index.html',context)
+    return render(request, 'adminpage/index.html', context)
 
 
 
 @login_required(login_url='/')
 def staffhome(request):
-    client=Client.objects.all().count()
-    facture=Invoice.objects.all().count()
-    ba=BordereauAdministratif.objects.all().count()
+    client = Client.objects.all().count()
+    facture = Invoice.objects.all().count()
+    ba = BordereauAdministratif.objects.all().count()
+    clients_with_invoice_count = Client.objects.annotate(num_invoices=Count('invoice')).order_by('-num_invoices')
 
-    objets = Invoice.objects.all()
+    # Graphique clients facturés
+    labels = [client.prenom for client in clients_with_invoice_count]
+    data = [client.num_invoices for client in clients_with_invoice_count]
+
+    # Graphique par année
+    invoices_by_year = (
+        Invoice.objects.annotate(year=TruncYear('date_creation'))
+        .values('year')
+        .annotate(num_invoices=Count('id'))
+        .order_by('year')
+    )
+
+    labelyear = [invoice['year'].year for invoice in invoices_by_year]
+    datayear = [invoice['num_invoices'] for invoice in invoices_by_year]
+
+    # Graphique par mois
+    invoices_by_month = (
+        Invoice.objects.annotate(month=TruncMonth('date_creation'))
+        .values('month')
+        .annotate(num_invoices=Count('id'))
+        .order_by('month')
+    )
+
+    labelmonth = [invoice['month'].strftime('%B %Y') for invoice in invoices_by_month]
+    datamonth = [invoice['num_invoices'] for invoice in invoices_by_month]
+
+    # Graphique total par mois
+    prices_by_month = (
+        Article.objects.annotate(month=TruncMonth('invoice__date_creation'))
+        .values('month')
+        .annotate(total_prices=Sum(F('unit_price') * F('quantity')))
+        .order_by('month')
+    )
+
+    labelmonthprices = [price['month'].strftime('%B %Y') for price in prices_by_month]
+    datamonthprices = [float(price['total_prices']) for price in prices_by_month]
+
 
     total = 0
 
-    for objet in objets:
+    for objet in Invoice.objects.all():
         total += objet.total
 
-    context={
-        'client':client,
-        'facture':facture,
-        'argent':total,
-        'ba':ba,
+    context = {
+        'client': client,
+        'facture': facture,
+        'argent': total,
+        'ba': ba,
+
+        'clients': clients_with_invoice_count,
+        'labels': labels,
+        'data': data,
+
+        'labelyear': labelyear,
+        'datayear': datayear,
+
+        'labelmonth': labelmonth,
+        'datamonth': datamonth,
+
+        'labelmonthtotal': labelmonthprices,
+        'datamonthtotal': datamonthprices,
     }
 
     return render(request,"staffpage/index.html",context)
