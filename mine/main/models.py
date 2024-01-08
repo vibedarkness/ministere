@@ -88,8 +88,7 @@ class Client(models.Model):
 class Invoice(models.Model):
     client=models.ForeignKey(Client, on_delete=models.PROTECT)
     total = models.DecimalField(max_digits=1000, decimal_places=2,null=True, default=0)
-    date_creation = models.DateField(auto_now=False, auto_now_add=False,null=True, )
-    date_fin = models.DateField(auto_now=False, auto_now_add=False,null=True, )
+    date_creation = models.DateField(auto_now=False, auto_now_add=True,null=True, )
     status = models.SmallIntegerField(default=0, null=True)
     user=models.ForeignKey(Staff,on_delete=models.PROTECT, related_name="secretary_rept", null=True, default=2)
 

@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 from main.EmailBackEnd import EmailBackEnd
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count,Sum
+from django.db.models.functions import TruncYear,TruncMonth
 
 
 from main.models import *
@@ -50,8 +52,56 @@ def adminhome(request):
     client=Client.objects.all().count()
     facture=Invoice.objects.all().count()
     ba=BordereauAdministratif.objects.all().count()
+    clients_with_invoice_count = Client.objects.annotate(num_invoices=Count('invoice')).order_by('-num_invoices')
 
+    # clients facture
+    labels = [client.prenom for client in clients_with_invoice_count]
+    data = [client.num_invoices for client in clients_with_invoice_count]
     objets = Invoice.objects.all()
+
+
+    #année
+
+    invoices_by_year = (
+        Invoice.objects.annotate(year=TruncYear('date_creation'))
+        .values('year')
+        .annotate(num_invoices=Count('id'))
+        .order_by('year')
+    )
+
+    # Préparer les données pour le graphique
+    labelyear = [invoice['year'].year for invoice in invoices_by_year]
+    datayear = [invoice['num_invoices'] for invoice in invoices_by_year]
+
+
+
+    #mois
+    
+    invoices_by_month = (
+        Invoice.objects.annotate(month=TruncMonth('date_creation'))
+        .values('month')
+        .annotate(num_invoices=Count('id'))
+        .order_by('month')
+    )
+
+    # Préparer les données pour le graphique
+    labelmonth = [invoice['month'].strftime('%B %Y') for invoice in invoices_by_month]
+    datamonth = [invoice['num_invoices'] for invoice in invoices_by_month]
+
+
+    #Total par mois
+
+    invoices_by_month_total = (
+        Invoice.objects.annotate(month=TruncMonth('date_creation'))
+        .values('month')
+        .annotate(total_invoices=Sum('total'))
+        .order_by('month')
+    )
+
+    # Préparer les données pour le graphique circulaire
+    labelmonthtotal = [invoice['month'].strftime('%B %Y') for invoice in invoices_by_month_total]
+    datamonthtotal = [invoice['total_invoices'] for invoice in invoices_by_month_total]
+
 
     total = 0
 
@@ -63,6 +113,20 @@ def adminhome(request):
         'facture':facture,
         'argent':total,
         'ba':ba,
+
+        'clients': clients_with_invoice_count,
+        'labels': labels,
+        'data': data,
+
+        'labelyear':labelyear,
+        'datayear':datayear,
+
+        'labelmonth': labelmonth,
+        'datamonth': datamonth,
+
+        'labelmonthtotal': labelmonthtotal,
+        'datamonthtotal': datamonthtotal,
+
     }
 
     return render(request,'adminpage/index.html',context)

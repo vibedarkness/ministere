@@ -81,10 +81,6 @@ def get_demande(request):
 
                 client = request.POST.get('client')
 
-                date_creation = request.POST.get('date_creation')
-                
-                date_fin = request.POST.get('date_fin')
-
                 articles = request.POST.getlist('article')
 
                 qties = request.POST.getlist('qty')

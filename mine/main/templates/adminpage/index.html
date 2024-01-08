@@ -3,18 +3,19 @@
 {% load static %}
 {%block main %}
 <div class="row">
-  <div class="col-xl-6">
-						<div class="card overflow-hidden">
-							<div class="card-body">
-								<div class="any-card">
-									<div class="c-con">
-										<h4 class="heading mb-0">Tota de <strong>Client!!</strong><img src="{% static "images/crm/party-popper.png" %}" alt=""></h4>
-										<h3 class="mt-3">{{client}}</h3>
-										 
+					<div class="col-xl-3 col-sm-6">
+						<div class="card">
+							<div class="card-body d-flex justify-content-between align-items-center">
+								<div class="d-flex">
+									<div class="icon-box icon-box-md bg-danger-light me-1">
+										<i class="fa-solid fa-chart-simple text-danger"></i>
 									</div>
-									<img src="{% static "images/coin.png" %}" class="harry-img" alt="">
-									
-								</div>	
+									<div class="ms-2">
+										<h4>{{client}}</h4>
+										<p class="mb-0">Clients</p>
+									</div>
+								</div>
+								<a href="javascript:void(0)"><i class="fa-solid fa-chevron-right text-danger"></i></a>
 							</div>
 						</div>
 					</div>
@@ -40,6 +41,11 @@
 							</div>
 						</div>
 					</div>
+
+
+					
+
+
 					<div class="col-xl-3 col-md-6">
 						<div class="card">
 							<div class="card-header border-0">
@@ -63,7 +69,152 @@
 								<div id="SalesChart"></div>
 							</div>
 						</div>
-					</div
+					</div>
+
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div style="display: flex;">
+		<div id="container" style="width: 40%;">
+			<canvas id="clientInvoiceChart" width="400" height="200"></canvas>
+		</div>
+		<div id="container" style="width: 40%; margin-left: 100px;">
+			<canvas id="invoicesByYearChart" width="400" height="200"></canvas>
+		</div>
+</div>
+<br><br>
+
+<div style="display: flex;">
+	<div id="container" style="width: 40%;">
+		<canvas id="invoicesByMonthChart" width="400" height="200"></canvas>
+	</div>
+	<div id="container" style="width: 40%; margin-left: 100px;">
+		<canvas id="totalInvoicesByMonthChart" width="400" height="200"></canvas>
+	</div>
+
+</div>
+
+<!-- Graphique client facture -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('clientInvoiceChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ labels|safe }},
+                datasets: [{
+                    label: 'Nombre de factures par client',
+                    data: {{ data|safe }},
+                    backgroundColor: 'rgba(0, 100, 0, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Graphique Année -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('invoicesByYearChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ labelyear|safe }},
+                datasets: [{
+                    label: 'Nombre de factures par année',
+                    data: {{ datayear|safe }},
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+
+
+<!--Graphique Mois -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('invoicesByMonthChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ labelmonth|safe }},
+                datasets: [{
+                    label: 'Nombre total de factures par mois',
+                    data: {{ datamonth|safe }},
+                    backgroundColor: 'rgba(0, 128, 0, 0.2)',  // Vert foncé avec une opacité de 0.2
+                    borderColor: 'rgba(0, 128, 0, 1)',        // Bordure verte foncée
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+
+<!-- Montant total par mois  -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('totalInvoicesByMonthChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: {{ labelmonthtotal|safe }},
+                datasets: [{
+                    label: 'Total des factures par mois',
+                    data: {{ datamonthtotal|safe }},
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',  // Rouge
+                        'rgba(54, 162, 235, 0.2)',  // Bleu
+                        'rgba(255, 206, 86, 0.2)',  // Jaune
+                        // Ajoutez plus de couleurs si nécessaire
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        });
+    });
+</script>
 {% endblock main %}
