@@ -76,7 +76,7 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3"></script>
 <div style="display: flex;">
 		<div id="container" style="width: 40%;">
 			<canvas id="clientInvoiceChart" width="400" height="200"></canvas>
@@ -87,13 +87,11 @@
 </div>
 <br><br>
 
-<div style="display: flex;">
-	<div id="container" style="width: 40%;">
-		<canvas id="invoicesByMonthChart" width="400" height="200"></canvas>
-	</div>
-	<div id="container" style="width: 40%; margin-left: 100px;">
-		<canvas id="totalPricesByMonthChart" width="400" height="200"></canvas>
-	</div>
+<div style="display: block;">
+    <p style="margin-left: 460px;">Total De facture par mois</p>
+	<div id="container" style="width: 40%; margin-left: 300px;">
+        <canvas id="totalMonthChart" width="400" height="400"></canvas>
+    </div>
 
 </div>
 
@@ -161,24 +159,36 @@
 <!--Graphique Mois -->
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var ctx = document.getElementById('invoicesByMonthChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('totalMonthChart').getContext('2d');
+        var totalMonthChart = new Chart(ctx, {
+            type: 'pie',  // Type de graphique : diagramme circulaire (pie chart)
             data: {
                 labels: {{ labelmonth|safe }},
                 datasets: [{
-                    label: 'Nombre total de factures par mois',
+
+
                     data: {{ datamonth|safe }},
-                    backgroundColor: 'rgba(0, 128, 0, 0.2)',  // Vert foncé avec une opacité de 0.2
-                    borderColor: 'rgba(0, 128, 0, 1)',        // Bordure verte foncée
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(255, 205, 86, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(153, 102, 255, 0.7)',
+                        'rgba(255, 159, 64, 0.7)',
+                    ],
+                    borderColor: '#fff',  // Bordure blanche
                     borderWidth: 1
                 }]
             },
             options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Répartition du total par mois',
+                        
                     }
                 }
             }
@@ -188,48 +198,28 @@
 
 
 <!-- Montant total par mois  -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var ctx = document.getElementById('totalPricesByMonthChart').getContext('2d');
-
-        // Convertir les valeurs de datamonthprices en nombres
-        var datamonthpricesNumeric = {{ datamonthprices|default:"[]"|safe }};
-
-        // Si datamonthprices n'est pas défini, initialisez-le comme un tableau vide
-        if (!datamonthpricesNumeric) {
-            datamonthpricesNumeric = [];
-        }
-
-        var myChart = new Chart(ctx, {
-            type: 'doughnut',
+{% comment %} <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('totalMonthChart').getContext('2d');
+        var totalMonthChart = new Chart(ctx, {
+            type: 'pie',
             data: {
-                labels: {{ labelmonthprices|safe }},
+                labels: {{ labelmonthtotal|safe }},
                 datasets: [{
-                    label: 'Total des prix des articles par mois',
-                    data: datamonthpricesNumeric,
+                    data: {{ datamonthtotal|safe }},
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',  // Rouge
-                        'rgba(54, 162, 235, 0.2)',  // Bleu
-                        'rgba(255, 206, 86, 0.2)',  // Jaune
-                        // Ajoutez plus de couleurs si nécessaire
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(255, 205, 86, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(153, 102, 255, 0.7)',
+                        'rgba(255, 159, 64, 0.7)',
                     ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                    ],
-                    borderWidth: 1
-                }]
+                }],
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-            }
         });
     });
-</script>
-
-
+</script> {% endcomment %}
 
 
 

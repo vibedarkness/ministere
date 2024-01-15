@@ -12,8 +12,15 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count,Sum,F
 from django.db.models.functions import TruncYear,TruncMonth
 
-
+from decimal import Decimal
 from main.models import *
+import logging
+import locale
+
+# Définir la localisation en français
+locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
+
+logger = logging.getLogger(__name__)
 
 # from main.forms import *
 
@@ -60,15 +67,16 @@ def adminhome(request):
 
     # Graphique par année
     invoices_by_year = (
-        Invoice.objects.annotate(year=TruncYear('date_creation'))
-        .values('year')
-        .annotate(num_invoices=Count('id'))
-        .order_by('year')
-    )
+    Invoice.objects
+    .exclude(date_creation__isnull=True)  # Exclure les factures sans date de création
+    .annotate(year=TruncYear('date_creation'))
+    .values('year')
+    .annotate(num_invoices=Count('id'))
+    .order_by('year')
+)
 
-    labelyear = [invoice['year'].year for invoice in invoices_by_year]
+    labelyear = [invoice['year'].year if 'year' in invoice else None for invoice in invoices_by_year]
     datayear = [invoice['num_invoices'] for invoice in invoices_by_year]
-
     # Graphique par mois
     invoices_by_month = (
         Invoice.objects.annotate(month=TruncMonth('date_creation'))
@@ -77,20 +85,23 @@ def adminhome(request):
         .order_by('month')
     )
 
+    # Formater le nom du mois en français
     labelmonth = [invoice['month'].strftime('%B %Y') for invoice in invoices_by_month]
     datamonth = [invoice['num_invoices'] for invoice in invoices_by_month]
+    # Rétablir la localisation par défaut
+    locale.setlocale(locale.LC_TIME, '')
+    
 
     # Graphique total par mois
-    prices_by_month = (
-        Article.objects.annotate(month=TruncMonth('invoice__date_creation'))
-        .values('month')
-        .annotate(total_prices=Sum(F('unit_price') * F('quantity')))
-        .order_by('month')
-    )
+    # prices_by_month = (
+    #     Article.objects.annotate(month=TruncMonth('invoice__date_creation'))
+    #     .values('month')
+    #     .annotate(total_prices=Sum(F('unit_price') * F('quantity')))
+    #     .order_by('month')
+    # )
 
-    labelmonthprices = [price['month'].strftime('%B %Y') for price in prices_by_month]
-    datamonthprices = [float(price['total_prices']) for price in prices_by_month]
-
+    # labelmonthprices = [price['month'].strftime('%B %Y') for price in prices_by_month]
+    # datamonthprices = [Decimal(price['total_prices'] or 0) for price in prices_by_month]
 
     total = 0
 
@@ -113,8 +124,10 @@ def adminhome(request):
         'labelmonth': labelmonth,
         'datamonth': datamonth,
 
-        'labelmonthtotal': labelmonthprices,
-        'datamonthtotal': datamonthprices,
+        # 'labelmonthtotal': labelmonthprices,
+        # 'datamonthtotal': datamonthprices,
+
+        
     }
 
     return render(request, 'adminpage/index.html', context)
@@ -134,15 +147,16 @@ def staffhome(request):
 
     # Graphique par année
     invoices_by_year = (
-        Invoice.objects.annotate(year=TruncYear('date_creation'))
-        .values('year')
-        .annotate(num_invoices=Count('id'))
-        .order_by('year')
-    )
+    Invoice.objects
+    .exclude(date_creation__isnull=True)  # Exclure les factures sans date de création
+    .annotate(year=TruncYear('date_creation'))
+    .values('year')
+    .annotate(num_invoices=Count('id'))
+    .order_by('year')
+)
 
-    labelyear = [invoice['year'].year for invoice in invoices_by_year]
+    labelyear = [invoice['year'].year if 'year' in invoice else None for invoice in invoices_by_year]
     datayear = [invoice['num_invoices'] for invoice in invoices_by_year]
-
     # Graphique par mois
     invoices_by_month = (
         Invoice.objects.annotate(month=TruncMonth('date_creation'))
@@ -151,25 +165,17 @@ def staffhome(request):
         .order_by('month')
     )
 
+    # Formater le nom du mois en français
     labelmonth = [invoice['month'].strftime('%B %Y') for invoice in invoices_by_month]
     datamonth = [invoice['num_invoices'] for invoice in invoices_by_month]
-
-    # Graphique total par mois
-    prices_by_month = (
-        Article.objects.annotate(month=TruncMonth('invoice__date_creation'))
-        .values('month')
-        .annotate(total_prices=Sum(F('unit_price') * F('quantity')))
-        .order_by('month')
-    )
-
-    labelmonthprices = [price['month'].strftime('%B %Y') for price in prices_by_month]
-    datamonthprices = [float(price['total_prices']) for price in prices_by_month]
-
+    # Rétablir la localisation par défaut
+    locale.setlocale(locale.LC_TIME, '')
 
     total = 0
 
     for objet in Invoice.objects.all():
-        total += objet.total
+        if isinstance(objet.total, (int, float)):
+            total += objet.total
 
     context = {
         'client': client,
@@ -186,9 +192,6 @@ def staffhome(request):
 
         'labelmonth': labelmonth,
         'datamonth': datamonth,
-
-        'labelmonthtotal': labelmonthprices,
-        'datamonthtotal': datamonthprices,
     }
 
     return render(request,"staffpage/index.html",context)

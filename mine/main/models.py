@@ -6,6 +6,8 @@ from num2words import num2words
 from django.db.models import Sum
 from django.utils import timezone
 from datetime import timedelta
+from django.db.models import Sum, F
+from django.db.models.functions import TruncMonth,ExtractYear
 
 class CustomUser(AbstractUser):
     user_type_data=((1,"HOD"),(2,"Staff"))
@@ -43,7 +45,7 @@ class Client(models.Model):
     email=models.CharField(max_length=200,unique=True)
     sexe=models.CharField(max_length=200)
     num_aggregation=models.CharField(max_length=200,null=True,default="")
-    date_aggregation=models.DateTimeField(null=True,auto_now=False, auto_now_add=True)
+    date_aggregation=models.DateTimeField(null=True,auto_now=False, auto_now_add=False)
     couleur_statut = models.CharField(max_length=10, choices=COULEUR_VALIDITE_CHOICES, default='vert')
     staff=models.ForeignKey(Staff, on_delete=models.CASCADE)
 
@@ -88,7 +90,7 @@ class Client(models.Model):
 class Invoice(models.Model):
     client=models.ForeignKey(Client, on_delete=models.PROTECT)
     total = models.DecimalField(max_digits=1000, decimal_places=2,null=True, default=0)
-    date_creation = models.DateField(auto_now=False, auto_now_add=True,null=True, )
+    date_creation = models.DateTimeField(auto_now=False, auto_now_add=True,null=True, )
     status = models.SmallIntegerField(default=0, null=True)
     user=models.ForeignKey(Staff,on_delete=models.PROTECT, related_name="secretary_rept", null=True, default=2)
 
@@ -99,6 +101,20 @@ class Invoice(models.Model):
         articles = self.article_set.all()   
         total = sum(article.get_total for article in articles)
         return total
+    
+    @staticmethod
+    def get_total_by_month():
+        invoices_by_month = (
+            Invoice.objects
+            .exclude(date_creation__isnull=True)
+            .annotate(month=TruncMonth('date_creation'))
+            .annotate(year=ExtractYear('date_creation'))
+            .values('year', 'month')
+            .annotate(month_total=Sum('total'))
+            .order_by('year', 'month')
+        )
+
+        return invoices_by_month
     @property
     def get_total_poids(self):
         articles = self.article_set.all()   
@@ -164,7 +180,7 @@ class Article(models.Model):
 class BordereauAdministratif(models.Model):
     client=models.ForeignKey(Client, on_delete=models.CASCADE)
     parametre=models.CharField(max_length=200)
-    date=models.DateField(auto_now_add=True)
+    date=models.DateTimeField(auto_now_add=True)
     numero_ordre=models.CharField(max_length=200,null=True,default="")
     type_echantillon=models.CharField(max_length=500)
     user=models.ForeignKey(Staff, on_delete=models.CASCADE,null=True, default=2)

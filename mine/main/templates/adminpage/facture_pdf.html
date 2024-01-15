@@ -79,13 +79,13 @@
   <h2 style="text-align:center;"> <u> Facture N° 000{{ obj.id }} </u></h2>
   <br>
 </div>
-<div  style="width: 400px;height: auto; border: 1px solid black; border-radius: 25px; margin-left: 200px;">
+<div  style="width: 600px;height: auto; border: 1px solid black; border-radius: 25px; margin-left: 200px;">
     <h4 style="line-height: 1em; margin-top: 10px; margin-left: 10px;">Nom du Client : {{ obj.client.prenom }} {{ obj.client.nom }}</h4><br>
     <h4 style="line-height: 1em; margin-left: 10px;">Référence de l'Aggrément n°: {{ obj.client.num_aggregation }}</h4><br>
     <h4 style="line-height: 1em; margin-left: 10px;">MFB/DMC/DER/NDD</h4><br>
     <h4 style="line-height: 1em; margin-left: 10px;">Du 08 février 2023</h4><br>
     <h4 style="line-height: 0.1em;margin-left: 10px; ">Adresse :  {{ obj.client.adresse}}</h4><br>
-    <h4 style="line-height: 1em; margin-left: 10px;"><i class="fas fa-phone"></i>: {{ obj.client.telephone }}</h4><br>
+    <h4 style="line-height: 1em; margin-left: 10px;"><i class="fas fa-phone"></i>Telephone: {{ obj.client.telephone }}</h4><br>
 
 </div>
 <br><br><br>
@@ -95,7 +95,7 @@
                                             <tr style="border: 1px solid black;">
                                                 
                                                 <th style="border: 1px solid black;">Designation</th>
-                                                <th class="center" style="border: 1px solid black;"> Poids en Grammes</th>
+                                                <th class="center" style="border: 1px solid black;"> Quantite</th>
                                                 <th class="center" style="border: 1px solid black;"> Titre en caracts</th>
                                                 <th class="right" style="border: 1px solid black;">Prix Unitaire</th>
                                                 <th class="right" style="border: 1px solid black;">Total(FCfa)</th>

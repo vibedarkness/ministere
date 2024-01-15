@@ -49,7 +49,7 @@
 
                                 <td>{{fr.client.prenom}} {{fr.client.nom}}</td>
                                 <td>{{fr.user.admin.first_name}} {{fr.user.admin.last_name}}</td>
-                                <td>{{fr.date_creation | date:"d/m/Y"}}</td>
+                                <td>{{fr.date_creation | date:"Y-m-d H:i:s" }}</td>
                                 <td>{{fr.total}}</td>
                                 <td>
                                                         <a class="btn btn-success btn-sm" href="{% url 'facture_view' pk=fr.pk %}">Voir Facture</a>

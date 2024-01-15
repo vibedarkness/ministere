@@ -43,7 +43,7 @@ class AddClientForm(forms.Form):
     telephone=forms.CharField(label="Numero Telephone",max_length=50,widget=forms.TextInput(attrs={"class":"form-control"}))
     email=forms.EmailField(label="Email",max_length=50,widget=forms.EmailInput(attrs={"class":"form-control"}))
     num_aggregation=forms.CharField(label="Numero Aggrement",max_length=100,widget=forms.TextInput(attrs={"class":"form-control"}))
-
+    date_aggregation = forms.DateField(label="Date Aggrement", widget=forms.DateInput(attrs={"class": "form-control", "type": "date"}))
     gender_choice=(
         ("Masculin","Masculin"),
         ("Feminin","Feminin"),

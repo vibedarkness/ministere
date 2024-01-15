@@ -46,9 +46,11 @@ def add_client_save(request):
             email=form.cleaned_data["email"]
             sexe=form.cleaned_data["sexe"]
             num_aggregation=form.cleaned_data["num_aggregation"]
+            date_aggregation=form.cleaned_data["date_aggregation"]
+            
             staff= get_object_or_404(Staff, admin_id=request.user.id)
             try:
-                client=Client(staff=staff,nom=nom,prenom=prenom,adresse=adresse,telephone=telephone,email=email,sexe=sexe,num_aggregation=num_aggregation)
+                client=Client(staff=staff,nom=nom,prenom=prenom,adresse=adresse,telephone=telephone,email=email,sexe=sexe,num_aggregation=num_aggregation,date_aggregation=date_aggregation)
                 client.save()
                 messages.success(request,"Client Ajouté avec Succés")
                 return HttpResponseRedirect(reverse("add_client"))
@@ -101,10 +103,6 @@ def get_demande(request):
 
                     invoice_object = {
                         'client_id': client,
-
-                        'date_creation':date_creation,
-
-                        'date_fin':date_fin,
                         
                         'user':user,
                         
@@ -233,7 +231,7 @@ def generate_qr(request, invoice_id):
     # Sélectionnez le premier article pour générer le code QR
     article = values_from_database.first()
 
-    qr_code_data = f"Demandeur: {article.invoice.client.prenom} {article.invoice.client.nom}\nAdresse: {article.invoice.client.adresse}\nTelephone: {article.invoice.client.telephone}\nTitre en Caracts:{article.titre_en_caract}\nQuantite:{article.quantity}\nTotal:{article.get_total}"
+    qr_code_data = f" Demandeur: {article.invoice.client.prenom} {article.invoice.client.nom}\n Adresse: {article.invoice.client.adresse}\n Telephone: {article.invoice.client.telephone}\n Numero Aggrement: {article.invoice.client.num_aggregation}\n Date Aggrement: {article.invoice.client.date_aggregation}\n Titre en Caracts:{article.titre_en_caract}\n Quantite:{article.quantity}\n Total:{article.get_total}"
 
     qr = qrcode.QRCode(
         version=1,
