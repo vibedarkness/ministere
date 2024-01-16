@@ -20,6 +20,8 @@ urlpatterns = [
     path('bordereau_admin_pdf/<int:id>',HodViews.get_bordereau_admin_final_pdf, name="bordereau_admin_pdf"),
     path("client_list_admin",HodViews.client_list,name='client_list_admin'),
     path("list_ba_admin",HodViews.list_ba,name='list_ba_admin'),
+    path('generate-attestation-qr/<int:attestation_id>/', HodViews.generate_attestation_qr, name='generate_attestation_qr'),
+
 
     #==============Staff Urls========================
     path("staff",views.staffhome,name='staff_home'),

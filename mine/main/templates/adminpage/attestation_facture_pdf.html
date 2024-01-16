@@ -80,13 +80,13 @@
   <br>
 </div>
 <br><h3 style="text-align: center;"> Test Qualificatif de controle des métaux Précieux</h3>
-<div  style="width: 400px;height: auto; border: 1px solid black; border-radius: 25px; margin-left: 200px;">
+<div  style="width: 600px;height: auto; border: 1px solid black; border-radius: 25px; margin-left: 200px;">
     <h4 style="line-height: 1em; margin-top: 10px; margin-left: 10px;">Nom du Client : {{ obj.client.prenom }} {{ obj.client.nom }}</h4><br>
     <h4 style="line-height: 1em; margin-left: 10px;">Référence de l'Aggrément n°: {{ obj.client.num_aggregation }}</h4><br>
     <h4 style="line-height: 1em; margin-left: 10px;">MFB/DMC/DER/NDD</h4><br>
     <h4 style="line-height: 1em; margin-left: 10px;">Du 08 février 2023</h4><br>
     <h4 style="line-height: 0.1em;margin-left: 10px; ">Adresse :  {{ obj.client.adresse}}</h4><br>
-    <h4 style="line-height: 1em; margin-left: 10px;"><i class="fas fa-phone"></i>: {{ obj.client.telephone }}</h4><br>
+    <h4 style="line-height: 1em; margin-left: 10px;"><i class="fas fa-phone"></i>Telephone: {{ obj.client.telephone }}</h4><br>
 
 </div>
 <br><br><br><br><br><br>
@@ -113,13 +113,12 @@
                                     <h3 style="margin-left: 150px;" >En foi de quoi cette Attestation lui est délivrée pour servir et valoir ce que de droit : </h3>
 <br>
 
-                                    <div style="flex-direction: initial; margin: 80px;">
+<div style="flex-direction: initial; margin: 80px;">
 
-                                    <img  style="width: 150px; height: 150px; " src="http://127.0.0.1:8000/generate-qr" alt="profile picture">
-                                   
+    <!-- <img  style="width: 150px; height: 150px; " src="http://127.0.0.1:8000/generate-qr" alt="profile picture"> -->
+    <img style="width: 150px; height: 150px;" src="http://127.0.0.1:8000/generate-attestation-qr/{{ obj.id }}" alt="profile picture">
 
-                                    </div>
-
+    </div>
                                     <br>
 
 

@@ -11,6 +11,7 @@ from django.views import View
 import pdfkit
 import datetime
 from django.template.loader import get_template
+import qrcode
 
 
 @login_required(login_url='/')
@@ -145,6 +146,34 @@ def get_invoice_final_pdf(request, *args, **kwargs):
 
 
 
+def generate_attestation_qr(request,attestation_id):
+    values_from_database = Article.objects.filter(invoice__id=attestation_id)
+
+    # Assurez-vous qu'il y a au moins un article lié à la facture
+    if not values_from_database.exists():
+        return HttpResponse("Aucun article trouvé pour cette facture.")
+
+    # Sélectionnez le premier article pour générer le code QR
+    article = values_from_database.first()
+
+    qr_code_data = f" Demandeur: {article.invoice.client.prenom} {article.invoice.client.nom}\n Adresse: {article.invoice.client.adresse}\n Telephone: {article.invoice.client.telephone}\n Numero Aggrement: {article.invoice.client.num_aggregation}\n Date Aggrement: {article.invoice.client.date_aggregation}\n Titre en Caracts:{article.titre_en_caract}\n Quantite:{article.quantity}\n Total:{article.get_total}"
+
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(qr_code_data)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    # Renvoyez l'image du code QR dans la réponse
+    response = HttpResponse(content_type="image/png")
+    img.save(response, "PNG")
+
+    return response
 
 
 def get_attestation_final_pdf(request, *args, **kwargs):
