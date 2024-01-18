@@ -35,6 +35,7 @@
                                 <th>Sexe</th>
                                 <th>Ajouter Par</th>
                                 <th>Num Aggrement</th>
+                                <th>Date Aggrement</th>
                                 <th>Validité</th>
                                 <th>Actions</th>
                                 
@@ -56,6 +57,7 @@
                                 <td>{{fr.sexe}}</td>
                                 <td>{{fr.staff.admin.first_name}} {{fr.staff.admin.last_name}}</td>
                                 <td>{{fr.num_aggregation}}</td>
+                                <td>{{fr.date_aggregation}}</td>
                                 <td class="{% if fr.date_aggregation_expiree %}rouge{% elif fr.date_aggregation is none %}orange{% else %}vert{% endif %}">
                                     {{ fr.verifier_date_aggregation }}
                                 </td>

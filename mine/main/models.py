@@ -47,6 +47,7 @@ class Client(models.Model):
     num_aggregation=models.CharField(max_length=200,null=True,default="")
     date_aggregation=models.DateTimeField(null=True,auto_now=False, auto_now_add=False)
     couleur_statut = models.CharField(max_length=10, choices=COULEUR_VALIDITE_CHOICES, default='vert')
+    date_aggregation_expiree = models.BooleanField(default=False)
     staff=models.ForeignKey(Staff, on_delete=models.CASCADE)
 
     def sexechange(self):
@@ -57,21 +58,22 @@ class Client(models.Model):
         
     def verifier_date_aggregation(self):
         if self.date_aggregation is not None:
-            duree_aggregation = timezone.now() - self.date_aggregation
-
-            if duree_aggregation >= timedelta(days=365):
-                self.date_aggregation_expiree = True
-                self.date_aggregation = timezone.now()
+            if self.date_aggregation_expiree:
                 self.couleur_statut = 'rouge'
-                self.save()
                 return "Expiré"
             else:
-                self.date_aggregation_expiree = False
-                self.couleur_statut = 'vert'
-                return "En cours de Validité"
+                duree_aggregation = timezone.now() - self.date_aggregation
+                if duree_aggregation >= timedelta(days=365):
+                    self.date_aggregation_expiree = True
+                    self.couleur_statut = 'rouge'
+                    self.save()
+                    return "Expiré"
+                else:
+                    self.couleur_statut = 'vert'
+                    self.save()
+                    return "En cours de Validité"
         else:
             self.couleur_statut = 'orange'
-            # La date d'agrégation est manquante, vous pouvez traiter cela en conséquence
             return "Date manquante."        
 
     @property

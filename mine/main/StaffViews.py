@@ -52,6 +52,7 @@ def add_client_save(request):
             try:
                 client=Client(staff=staff,nom=nom,prenom=prenom,adresse=adresse,telephone=telephone,email=email,sexe=sexe,num_aggregation=num_aggregation,date_aggregation=date_aggregation)
                 client.save()
+                
                 messages.success(request,"Client Ajouté avec Succés")
                 return HttpResponseRedirect(reverse("add_client"))
             except Exception as e:
