@@ -49,7 +49,7 @@
 					
 
 
-					<div class="col-xl-3 col-md-6">
+					{% comment %} <div class="col-xl-3 col-md-6">
 						<div class="card">
 							<div class="card-header border-0">
 								<div class="d-flex align-items-center">
@@ -72,7 +72,7 @@
 								<div id="SalesChart"></div>
 							</div>
 						</div>
-					</div>
+					</div> {% endcomment %}
 
 </div>
 
@@ -95,20 +95,44 @@
 
 </div>
 
+<div style="display: block;">
+    <div id="container" style="width: 40%; margin-left: 300px;">
+<canvas id="monthlyInvoiceChart" width="600" height="400"></canvas>
+
+</div>
+</div>
+
 <!-- Graphique client facture -->
 
 <script>
+    // Fonction pour générer une couleur aléatoire
+    function randomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         var ctx = document.getElementById('clientInvoiceChart').getContext('2d');
+        var numClients = {{ labels|length }}; // Nombre de clients
+        var backgroundColors = []; // Tableau pour stocker les couleurs aléatoires
+
+        // Générer des couleurs aléatoires pour chaque client
+        for (var i = 0; i < numClients; i++) {
+            backgroundColors.push(randomColor());
+        }
+
         var myChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'pie', // Changer le type de graphique en pie
             data: {
                 labels: {{ labels|safe }},
                 datasets: [{
                     label: 'Nombre de factures par client',
                     data: {{ data|safe }},
-                    backgroundColor: 'rgba(0, 100, 0, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: backgroundColors, // Utiliser les couleurs aléatoires
                     borderWidth: 1
                 }]
             },
@@ -122,7 +146,6 @@
         });
     });
 </script>
-
 
 
 
@@ -189,6 +212,35 @@
                         display: true,
                         text: 'Répartition du total par mois',
                         
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('monthlyInvoiceChart').getContext('2d');
+        var data_argent = JSON.parse('{{ data_argent|safe }}');
+
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data_argent.months,
+                datasets: [{
+                    label: 'Montants totaux des factures par mois',
+                    data: data_argent.totals,
+                    borderColor: 'rgba(0, 0, 0, 1)' ,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
                     }
                 }
             }

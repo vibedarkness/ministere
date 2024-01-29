@@ -156,7 +156,7 @@ def generate_attestation_qr(request,attestation_id):
     # Sélectionnez le premier article pour générer le code QR
     article = values_from_database.first()
 
-    qr_code_data = f" Demandeur: {article.invoice.client.prenom} {article.invoice.client.nom}\n Adresse: {article.invoice.client.adresse}\n Telephone: {article.invoice.client.telephone}\n Numero Aggrement: {article.invoice.client.num_aggregation}\n Date Aggrement: {article.invoice.client.date_aggregation}\n Titre en Caracts:{article.titre_en_caract}\n Quantite:{article.quantity}\n Total:{article.get_total}"
+    qr_code_data = f" Demandeur: {article.invoice.client.prenom} {article.invoice.client.nom}\n Adresse: {article.invoice.client.adresse}\n Telephone: {article.invoice.client.telephone}\n Numero Aggrement: {article.invoice.client.num_aggregation}\n Date Aggrement: {article.invoice.client.date_aggregation}\n Titre en Caracts:{article.titre_en_caract}\n Quantite:{article.quantity}\n Total:{article.get_total}\nNumero Facture: {article.invoice.id}\nDate Facture: {article.invoice.date_creation}\nPoids total en Grammes: {article.invoice.get_total_poids}"
 
     qr = qrcode.QRCode(
         version=1,

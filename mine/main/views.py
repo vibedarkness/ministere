@@ -147,16 +147,17 @@ def staffhome(request):
 
     # Graphique par année
     invoices_by_year = (
-    Invoice.objects
-    .exclude(date_creation__isnull=True)  # Exclure les factures sans date de création
-    .annotate(year=TruncYear('date_creation'))
-    .values('year')
-    .annotate(num_invoices=Count('id'))
-    .order_by('year')
-)
+        Invoice.objects
+        .exclude(date_creation__isnull=True)
+        .annotate(year=TruncYear('date_creation'))
+        .values('year')
+        .annotate(num_invoices=Count('id'))
+        .order_by('year')
+    )
 
     labelyear = [invoice['year'].year if 'year' in invoice else None for invoice in invoices_by_year]
     datayear = [invoice['num_invoices'] for invoice in invoices_by_year]
+
     # Graphique par mois
     invoices_by_month = (
         Invoice.objects.annotate(month=TruncMonth('date_creation'))
@@ -168,11 +169,24 @@ def staffhome(request):
     # Formater le nom du mois en français
     labelmonth = [invoice['month'].strftime('%B %Y') for invoice in invoices_by_month]
     datamonth = [invoice['num_invoices'] for invoice in invoices_by_month]
-    # Rétablir la localisation par défaut
-    locale.setlocale(locale.LC_TIME, '')
+
+    # Récupérer les montants totaux des factures par mois
+    monthly_totals = Invoice.objects.annotate(month=TruncMonth('date_creation')) \
+        .values('month') \
+        .annotate(total_amount=Sum('total')) \
+        .order_by('month')
+
+    # Préparer les données pour Chart.js
+    months = []
+    totals = []
+    for item in monthly_totals:
+        months.append(item['month'].strftime('%Y-%m'))  # Format 'AAAA-MM'
+        totals.append(float(item['total_amount']))  # Convertir en float
+
+    # Convertir les données en format JSON pour l'envoi à la vue
+    data_argent = json.dumps({'months': months, 'totals': totals})
 
     total = 0
-
     for objet in Invoice.objects.all():
         if isinstance(objet.total, (int, float)):
             total += objet.total
@@ -192,10 +206,10 @@ def staffhome(request):
 
         'labelmonth': labelmonth,
         'datamonth': datamonth,
+        'data_argent': data_argent,
     }
 
-    return render(request,"staffpage/index.html",context)
-
+    return render(request, "staffpage/index.html", context) 
 
 
 @login_required(login_url='/')

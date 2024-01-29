@@ -48,7 +48,7 @@
 
 					
 
-
+{% comment %} 
 					<div class="col-xl-3 col-md-6">
 						<div class="card">
 							<div class="card-header border-0">
@@ -72,7 +72,7 @@
 								<div id="SalesChart"></div>
 							</div>
 						</div>
-					</div>
+					</div> {% endcomment %}
 
 </div>
 
@@ -96,19 +96,35 @@
 </div>
 
 <!-- Graphique client facture -->
-
 <script>
+    // Fonction pour générer une couleur aléatoire
+    function randomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         var ctx = document.getElementById('clientInvoiceChart').getContext('2d');
+        var numClients = {{ labels|length }}; // Nombre de clients
+        var backgroundColors = []; // Tableau pour stocker les couleurs aléatoires
+
+        // Générer des couleurs aléatoires pour chaque client
+        for (var i = 0; i < numClients; i++) {
+            backgroundColors.push(randomColor());
+        }
+
         var myChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'pie', // Changer le type de graphique en pie
             data: {
                 labels: {{ labels|safe }},
                 datasets: [{
                     label: 'Nombre de factures par client',
                     data: {{ data|safe }},
-                    backgroundColor: 'rgba(0, 100, 0, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: backgroundColors, // Utiliser les couleurs aléatoires
                     borderWidth: 1
                 }]
             },
